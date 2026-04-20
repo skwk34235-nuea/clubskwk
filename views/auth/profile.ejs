@@ -1,0 +1,69 @@
+<%- include('../partials/header') %>
+
+<main class="flex-1 w-full relative overflow-hidden py-10 px-6 flex items-center justify-center">
+    <!-- Background Decor -->
+    <div class="absolute top-20 left-10 w-64 h-64 bg-neon-blue/15 rounded-full blur-[100px] animate-float pointer-events-none"></div>
+    <div class="absolute bottom-20 right-10 w-80 h-80 bg-skwkPink/15 rounded-full blur-[120px] animate-float-delayed pointer-events-none"></div>
+
+    <div class="w-full max-w-xl z-10 animate-slide-up">
+        <div class="bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] p-8 md:p-10 rounded-3xl shadow-glass relative overflow-hidden">
+            <header class="mb-10 text-center">
+                <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-skwkPink to-neon-blue p-0.5 shadow-neon-blue">
+                    <div class="w-full h-full rounded-full bg-neon-dark flex items-center justify-center text-3xl font-black text-white">
+                        <%= profile.firstname.charAt(0) %>
+                    </div>
+                </div>
+                <h2 class="text-3xl font-black text-white"><%= profile.firstname %> <%= profile.lastname %></h2>
+                <div class="mt-2 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] uppercase font-bold tracking-widest text-gray-400">
+                    <span class="w-2 h-2 rounded-full bg-neon-blue animate-pulse"></span>
+                    <%= profile.role %>
+                </div>
+            </header>
+
+            <% if (locals.success) { %>
+                <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 p-4 mb-8 rounded-xl backdrop-blur-md text-sm font-bold text-center">
+                    อัปเดตข้อมูลโปรไฟล์เรียบร้อยแล้ว
+                </div>
+            <% } %>
+
+            <% if (locals.error) { %>
+                <div class="bg-red-500/10 border border-red-500/30 text-red-400 p-4 mb-8 rounded-xl backdrop-blur-md text-sm font-bold text-center">
+                    <%= error %>
+                </div>
+            <% } %>
+
+            <form action="/auth/profile" method="POST" class="space-y-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest">ชื่อจริง</label>
+                        <input type="text" name="firstname" value="<%= profile.firstname %>" required
+                               class="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:border-neon-blue/50 focus:bg-white/10 outline-none transition-all">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest">นามสกุล</label>
+                        <input type="text" name="lastname" value="<%= profile.lastname %>" required
+                               class="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:border-neon-blue/50 focus:bg-white/10 outline-none transition-all">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest">ชื่อผู้ใช้งาน (แก้ไขไม่ได้)</label>
+                    <input type="text" value="<%= profile.username %>" disabled
+                           class="w-full px-4 py-3.5 rounded-xl bg-white/[0.02] border border-white/[0.04] text-gray-500 cursor-not-allowed">
+                </div>
+
+                <div class="pt-4 border-t border-white/5 space-y-2">
+                    <label class="block text-[10px] font-black text-skwkPink uppercase tracking-widest">เปลี่ยนรหัสผ่าน (ปล่อยว่างถ้าไม่ต้องการเปลี่ยน)</label>
+                    <input type="password" name="password" placeholder="รหัสผ่านใหม่"
+                           class="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:border-skwkPink/50 focus:bg-white/10 outline-none transition-all">
+                </div>
+
+                <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-neon-blue to-skwkPink text-white font-black text-lg shadow-neon-blue hover:scale-[1.02] transition-all mt-4">
+                    บันทึกข้อมูลส่วนตัว
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>รายชื่อนักเรียน - <%= club.name %></title>
+    <style>
+        @font-face {
+            font-family: 'Sarabun';
+            src: url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap');
+        }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            padding: 40px;
+            color: #333;
+            background: white;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .header p {
+            margin: 5px 0 0;
+            color: #666;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f9f9f9;
+        }
+        .footer {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .sign-area {
+            text-align: center;
+            width: 200px;
+        }
+        .sign-line {
+            border-bottom: 1px solid #333;
+            margin-bottom: 5px;
+            padding-top: 40px;
+        }
+        @media print {
+            .no-print { display: none; }
+            body { padding: 0; }
+        }
+        .no-print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #e83e8c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(232, 62, 140, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <button class="no-print-btn no-print" onclick="window.print()">พิมพ์หน้านี้</button>
+    <button class="no-print-btn no-print" style="right: 140px; background: #666;" onclick="window.history.back()">กลับ</button>
+
+    <div class="header">
+        <h1>รายชื่อนักเรียนสมาชิกคุ้มชมรม/ชุมนุม</h1>
+        <p>ชุมนุม: <%= club.name %> | ปีการศึกษา <%= locals.sysSettings ? sysSettings.academic_year : '2569' %></p>
+        <p>ครูที่ปรึกษา: <%= user.firstname %> <%= user.lastname %></p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 50px; text-align: center;">ลำดับ</th>
+                <th style="width: 120px;">รหัสนักเรียน</th>
+                <th>ชื่อ-นามสกุล</th>
+                <th style="width: 150px;">ระดับชั้น (ถ้ามี)</th>
+                <th style="width: 100px; text-align: center;">หมายเหตุ</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (members && members.length > 0) { %>
+                <% members.forEach((member, index) => { %>
+                    <tr>
+                        <td style="text-align: center;"><%= index + 1 %></td>
+                        <td><%= member.username %></td>
+                        <td><%= member.firstname %> <%= member.lastname %></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="5" style="text-align: center; color: #999; padding: 40px;">ยังไม่มีสมาชิกที่ได้รับการอนุมัติ</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <div>
+            พิมพ์เมื่อ: <%= new Date().toLocaleDateString('th-TH') %>
+        </div>
+        <div class="sign-area">
+            <div class="sign-line"></div>
+            (......................................................)
+            <p>ครูที่ปรึกษาชุมนุม</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<%- include('../partials/header') %>
+
+<main class="flex-1 w-full relative overflow-hidden py-10 px-6 flex justify-center items-center">
+    <!-- Background Decor -->
+    <div class="absolute top-20 left-10 w-72 h-72 bg-neon-purple/10 rounded-full blur-[120px] animate-float pointer-events-none"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-skwkPink/10 rounded-full blur-[150px] animate-float-delayed pointer-events-none"></div>
+
+    <div class="max-w-2xl w-full z-10 relative animate-slide-up">
+        <header class="mb-10 text-center">
+            <h1 class="text-4xl font-black text-white text-glow-pink">ตั้งค่าระบบส่วนกลาง</h1>
+            <p class="text-gray-400 mt-2">กำหนดสถานะการรับสมัครและข้อมูลพื้นฐานของโรงเรียน</p>
+        </header>
+
+        <% if (locals.success) { %>
+            <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 p-4 mb-8 rounded-xl backdrop-blur-md flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                <span class="font-bold">บันทึกการตั้งค่าเรียบร้อยแล้ว</span>
+            </div>
+        <% } %>
+
+        <div class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] p-8 md:p-10 rounded-3xl shadow-glass relative overflow-hidden">
+            <form action="/admin/settings" method="POST" class="space-y-8">
+                <!-- Registration Toggle -->
+                <div class="flex items-center justify-between p-5 rounded-2xl bg-white/[0.02] border border-white/5">
+                    <div>
+                        <h3 class="text-white font-bold text-lg">สถานะการเปิดรับสมัคร</h3>
+                        <p class="text-gray-500 text-sm">หากปิดอยู่ นักเรียนจะไม่สามารถสมัครชุมนุมใดๆ ได้</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="hidden" name="registration_open" value="0">
+                        <input type="checkbox" name="registration_open" value="1" <%= config.registration_open === '1' ? 'checked' : '' %> class="sr-only peer">
+                        <div class="w-14 h-7 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-400 after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-skwkPink peer-checked:after:bg-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"></div>
+                    </label>
+                </div>
+
+                <!-- School Info -->
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-black text-gray-500 uppercase tracking-widest">ชื่อโรงเรียน (ย่อหรือเต็ม)</label>
+                        <input type="text" name="school_name" value="<%= config.school_name %>" required
+                               class="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:border-neon-blue/50 focus:bg-white/10 outline-none transition-all">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-xs font-black text-gray-500 uppercase tracking-widest">ปีการศึกษา</label>
+                        <input type="text" name="academic_year" value="<%= config.academic_year %>" required
+                               class="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:border-neon-blue/50 focus:bg-white/10 outline-none transition-all">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-xs font-black text-gray-500 uppercase tracking-widest">ประกาศหน้าแรก</label>
+                        <textarea name="system_announcement" rows="3"
+                                  class="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:border-neon-blue/50 focus:bg-white/10 outline-none transition-all"><%= config.system_announcement %></textarea>
+                    </div>
+                </div>
+
+                <div class="pt-6 flex gap-4">
+                    <a href="/admin" class="flex-1 py-4 rounded-xl text-center text-gray-400 font-bold bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
+                        ยกเลิก
+                    </a>
+                    <button type="submit" class="flex-[2] py-4 rounded-xl bg-skwkPink text-white font-black text-lg shadow-neon-pink hover:scale-[1.02] transition-all">
+                        บันทึกการตั้งค่า
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>

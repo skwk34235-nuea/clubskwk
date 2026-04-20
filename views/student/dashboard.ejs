@@ -1,0 +1,117 @@
+<%- include('../partials/header') %>
+
+<main class="flex-1 w-full relative overflow-hidden py-10 px-6">
+    <!-- Background Decor -->
+    <div class="absolute top-20 left-10 w-72 h-72 bg-neon-blue/10 rounded-full blur-[120px] animate-float pointer-events-none"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-neon-purple/10 rounded-full blur-[150px] animate-float-delayed pointer-events-none"></div>
+
+    <div class="max-w-4xl mx-auto z-10 relative">
+        <header class="mb-10 animate-fade-in text-center">
+            <h1 class="text-4xl font-black text-white text-glow-blue tracking-tight">แดชบอร์ดนักเรียน</h1>
+            <p class="text-gray-400 mt-2 tracking-wide uppercase text-xs font-bold">ข้อมูลการสมัครชุมนุมของคุณ</p>
+        </header>
+
+        <% if (membership) { %>
+            <div class="animate-slide-up">
+                <div class="bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] p-8 md:p-10 rounded-3xl shadow-glass relative overflow-hidden">
+                    <!-- Top accent -->
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r 
+                        <%= membership.status === 'approved' ? 'from-emerald-500 to-teal-400' : 
+                           (membership.status === 'pending' ? 'from-amber-500 to-orange-400' : 
+                           'from-red-500 to-pink-600') %>"></div>
+
+                    <div class="flex flex-col md:flex-row gap-10 items-center">
+                        <!-- Status Icon -->
+                        <div class="relative shrink-0">
+                            <div class="w-32 h-32 rounded-3xl rotate-3 bg-white/5 border border-white/10 flex items-center justify-center relative z-10">
+                                <% if (membership.status === 'approved') { %>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-emerald-400 shadow-neon-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                <% } else if (membership.status === 'pending') { %>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                <% } else { %>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                <% } %>
+                            </div>
+                            <div class="absolute inset-0 bg-white/5 rounded-3xl -rotate-6 border border-white/5"></div>
+                        </div>
+
+                        <!-- Info -->
+                        <div class="flex-1 text-center md:text-left">
+                            <div class="flex flex-wrap items-center gap-3 justify-center md:justify-start mb-4">
+                                <span class="px-3 py-1 rounded-full text-[10px] font-black tracking-[0.2em] uppercase border
+                                    <%= membership.status === 'approved' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 
+                                       (membership.status === 'pending' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]' : 
+                                       'bg-red-500/10 text-red-400 border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]') %>">
+                                    <%= membership.status === 'approved' ? 'อนุมัติแล้ว' : (membership.status === 'pending' ? 'รอการพิจารณา' : 'ถูกปฏิเสธ') %>
+                                </span>
+                                <span class="text-gray-500 text-xs font-medium">สมัครเมื่อ <%= new Date(membership.registered_at).toLocaleDateString('th-TH') %></span>
+                            </div>
+
+                            <h2 class="text-3xl font-black text-white mb-2 tracking-tight"><%= membership.club_name %></h2>
+                            <p class="text-gray-400 mb-6 font-light leading-relaxed"><%= membership.description %></p>
+                            
+                            <div class="flex items-center gap-3 justify-center md:justify-start p-4 bg-white/5 rounded-2xl border border-white/5 inline-flex">
+                                <div class="w-8 h-8 rounded-full bg-neon-blue/20 flex items-center justify-center text-neon-blue font-bold text-xs">
+                                    <%= membership.teacher_firstname.charAt(0) %>
+                                </div>
+                                <div class="text-left">
+                                    <p class="text-[10px] uppercase text-gray-500 font-bold tracking-widest">ครูที่ปรึกษา</p>
+                                    <p class="text-sm font-bold text-gray-200"><%= membership.teacher_firstname %> <%= membership.teacher_lastname %></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mt-10 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div class="text-sm text-gray-500">
+                            <% if (membership.status === 'approved') { %>
+                                <p>ยินดีด้วย! คุณเป็นสมาชิกของชุมนุมนี้เรียบร้อยแล้ว</p>
+                            <% } else if (membership.status === 'pending') { %>
+                                <p>ใบสมัครของคุณกำลังรอการตรวจสอบจากครูที่ปรึกษา</p>
+                            <% } else { %>
+                                <p>ขออภัย ใบสมัครของคุณไม่ได้รับการอนุมัติ คุณสามารถเลือกสมัครชุมนุมอื่นได้</p>
+                            <% } %>
+                        </div>
+                        
+                        <% if (membership.status !== 'approved') { %>
+                            <form action="/student/club/<%= membership.club_id %>/leave" method="POST" onsubmit="return confirm('คุณแน่ใจหรือไม่ที่จะยกเลิกการสมัครนี้?')">
+                                <button type="submit" class="px-8 py-3 rounded-2xl bg-white/5 border border-white/10 text-gray-400 font-bold hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/30 transition-all duration-300">
+                                    ยกเลิกการสมัคร
+                                </button>
+                            </form>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        <% } else { %>
+            <div class="animate-slide-up bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] p-16 rounded-3xl text-center shadow-glass relative overflow-hidden">
+                <div class="w-24 h-24 mx-auto mb-8 rounded-3xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-white mb-2">คุณยังไม่ได้สมัครชุมนุมใดๆ</h2>
+                <p class="text-gray-400 mb-10 max-w-sm mx-auto font-light">กรุณาเลือกชุมนุมที่คุณสนใจจากหน้าแรก เพื่อทำการสมัครเข้าเป็นสมาชิก</p>
+                <a href="/" class="group relative inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold overflow-hidden transition-all duration-500 hover:scale-105 hover:shadow-neon-blue">
+                    <span class="absolute inset-0 bg-neon-blue rounded-2xl"></span>
+                    <span class="absolute inset-0 bg-gradient-to-r from-neon-blue to-skwkPink opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-2xl"></span>
+                    <span class="relative flex items-center gap-2">
+                        ไปที่หน้าเลือกชุมนุม
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        <% } %>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>

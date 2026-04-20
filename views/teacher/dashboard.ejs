@@ -1,0 +1,93 @@
+<%- include('../partials/header') %>
+
+<main class="flex-1 w-full relative overflow-hidden py-10 px-6">
+    <!-- Background Decor -->
+    <div class="absolute top-20 left-10 w-72 h-72 bg-neon-purple/10 rounded-full blur-[120px] animate-float pointer-events-none"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-skwkPink/10 rounded-full blur-[150px] animate-float-delayed pointer-events-none"></div>
+
+    <div class="max-w-6xl mx-auto z-10 relative">
+        <header class="mb-10 animate-fade-in flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-center md:text-left">
+                <h1 class="text-4xl font-black text-white text-glow-pink tracking-tight">แดชบอร์ดครูที่ปรึกษา</h1>
+                <p class="text-gray-400 mt-2">จัดการชุมนุมของคุณและตรวจสอบรายชื่อนักเรียน</p>
+            </div>
+            <a href="/teacher/club/create" class="group relative px-6 py-3 rounded-2xl text-white font-bold overflow-hidden transition-all duration-300 hover:shadow-neon-pink">
+                <span class="absolute inset-0 bg-gradient-to-r from-skwkPink to-neon-pink rounded-2xl"></span>
+                <span class="absolute inset-0 bg-gradient-to-r from-neon-pink to-skwkPink opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></span>
+                <span class="relative flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" />
+                    </svg>
+                    สร้างชุมนุมใหม่
+                </span>
+            </a>
+        </header>
+
+        <% if (clubs && clubs.length > 0) { %>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-up">
+                <% clubs.forEach(club => { %>
+                    <div class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] p-6 rounded-2xl shadow-glass group hover:border-skwkPink/50 transition-all duration-500 relative overflow-hidden flex flex-col">
+                        <div class="absolute inset-0 bg-gradient-to-br from-skwkPink/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                        
+                        <div class="relative z-10 flex-1">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="px-2 py-1 rounded-md text-[10px] uppercase font-black tracking-widest border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+                                    <%= club.status %>
+                                </span>
+                                <span class="text-gray-500 text-xs font-medium">
+                                    <%= new Date(club.created_at).toLocaleDateString('th-TH') %>
+                                </span>
+                            </div>
+                            
+                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-skwkPink transition-colors"><%= club.name %></h3>
+                            <p class="text-gray-400 text-sm mb-6 line-clamp-2 leading-relaxed"><%= club.description || 'ไม่มีรายละเอียด' %></p>
+                            
+                            <div class="space-y-4 mb-6">
+                                <div class="flex justify-between items-center text-xs font-bold tracking-wider">
+                                    <span class="text-gray-500 uppercase">ยอดผู้สมัคร</span>
+                                    <span class="text-skwkPink text-glow-pink">
+                                        <%= club.current_students %> / <%= club.max_students %>
+                                    </span>
+                                </div>
+                                <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-skwkPink to-neon-pink transition-all duration-700 shadow-neon-pink"
+                                         style="width: <%= (club.current_students / club.max_students) * 100 %>%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative z-10 mt-auto pt-4 border-t border-white/5 flex gap-2">
+                            <a href="/teacher/club/<%= club.id %>" class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 text-gray-300 font-bold border border-white/10 hover:bg-white/10 hover:text-white hover:border-skwkPink/30 transition-all duration-300">
+                                จัดการสมาชิก
+                            </a>
+                            <a href="/teacher/club/<%= club.id %>/edit" class="p-3 rounded-xl bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10 hover:text-white hover:border-neon-blue/30 transition-all duration-300" title="แก้ไขข้อมูล">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div class="flex flex-col items-center justify-center py-20 bg-white/[0.02] border border-white/[0.06] rounded-3xl border-dashed">
+                <div class="w-20 h-20 bg-white/[0.04] rounded-2xl flex items-center justify-center text-gray-700 mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                </div>
+                <h2 class="text-xl font-bold text-gray-300">คุณยังไม่มีชุมนุมที่ดูแล</h2>
+                <p class="text-gray-500 mt-2 mb-8">คลิกปุ่มด้านบนเพื่อสร้างชุมนุมใหม่ได้ทันที</p>
+                <a href="/teacher/club/create" class="text-skwkPink hover:text-white transition-colors font-bold flex items-center gap-2 group">
+                    สร้างชุมนุมแรกของคุณ 
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                </a>
+            </div>
+        <% } %>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>

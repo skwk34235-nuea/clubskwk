@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบสมัครชุมนุม ศรีกระนวนวิทยาคม</title>
+    <meta name="description" content="ระบบสมัครชุมนุมออนไลน์ โรงเรียนศรีกระนวนวิทยาคม - สมัครง่าย สะดวก รวดเร็ว">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            },
+            colors: {
+              skwkBlue: '#0c3a6a',
+              skwkPink: '#e83e8c',
+              neon: {
+                pink: '#ff2d95',
+                blue: '#00d4ff',
+                purple: '#a855f7',
+                dark: '#050510',
+                card: 'rgba(15, 15, 30, 0.6)',
+              }
+            },
+            boxShadow: {
+              'neon-pink': '0 0 15px rgba(232, 62, 140, 0.5), 0 0 30px rgba(232, 62, 140, 0.2)',
+              'neon-blue': '0 0 15px rgba(0, 212, 255, 0.5), 0 0 30px rgba(0, 212, 255, 0.2)',
+              'neon-glow': '0 0 20px rgba(232, 62, 140, 0.3), 0 0 40px rgba(0, 212, 255, 0.1)',
+              'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
+              'glass-hover': '0 12px 40px 0 rgba(0, 0, 0, 0.5), 0 0 30px rgba(232, 62, 140, 0.15)',
+            },
+            animation: {
+              'float': 'float 6s ease-in-out infinite',
+              'float-delayed': 'float 6s ease-in-out 3s infinite',
+              'glow-pulse': 'glowPulse 3s ease-in-out infinite',
+              'slide-up': 'slideUp 0.6s ease-out',
+              'slide-up-delayed': 'slideUp 0.6s ease-out 0.2s both',
+              'fade-in': 'fadeIn 0.8s ease-out',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0px)' },
+                '50%': { transform: 'translateY(-20px)' },
+              },
+              glowPulse: {
+                '0%, 100%': { opacity: '0.3' },
+                '50%': { opacity: '0.6' },
+              },
+              slideUp: {
+                '0%': { opacity: '0', transform: 'translateY(30px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+            },
+            backgroundImage: {
+              'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        /* Minimal base styles that Tailwind cannot handle */
+        body {
+            background-color: #050510;
+            background-image:
+                radial-gradient(ellipse at 20% 0%, rgba(232, 62, 140, 0.12) 0px, transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(0, 212, 255, 0.08) 0px, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(12, 58, 106, 0.1) 0px, transparent 70%);
+            background-attachment: fixed;
+        }
+        .text-glow-pink { text-shadow: 0 0 20px rgba(232, 62, 140, 0.6), 0 0 40px rgba(232, 62, 140, 0.3); }
+        .text-glow-blue { text-shadow: 0 0 20px rgba(0, 212, 255, 0.6), 0 0 40px rgba(0, 212, 255, 0.3); }
+        .border-glow { box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 0 15px rgba(232, 62, 140, 0.1); }
+        @keyframes borderRotate {
+            0% { --angle: 0deg; }
+            100% { --angle: 360deg; }
+        }
+    </style>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body class="min-h-screen flex flex-col text-gray-200 font-sans antialiased">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-black/40 border-b border-white/[0.06] shadow-glass">
+        <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
+            <!-- Logo -->
+            <a href="/" class="flex items-center gap-3 group">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-neon-pink/30 rounded-xl blur-lg group-hover:bg-neon-pink/50 transition-all duration-500"></div>
+                    <div class="relative bg-gradient-to-br from-skwkPink to-neon-pink p-2 rounded-xl shadow-neon-pink">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                        </svg>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-lg font-bold text-white tracking-wide">ชุมนุม</span>
+                    <span class="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-skwkPink to-neon-blue ml-1"><%= sysSettings.school_name || 'SKWK' %></span>
+                    <span class="ml-2 px-1.5 py-0.5 rounded bg-white/10 text-[9px] tracking-widest font-black border border-white/5 uppercase opacity-60">ปี <%= sysSettings.academic_year || '2569' %></span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <ul class="flex gap-2 items-center">
+                <li>
+                    <a href="/" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/[0.06] transition-all duration-300">
+                        หน้าแรก
+                    </a>
+                </li>
+                <% if (user) { %>
+                    <% if (user.role === 'admin') { %>
+                        <li>
+                            <a href="/admin" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/[0.06] transition-all duration-300">
+                                แดชบอร์ดผู้ดูแล
+                            </a>
+                        </li>
+                    <% } else if (user.role === 'teacher') { %>
+                        <li>
+                            <a href="/teacher" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/[0.06] transition-all duration-300">
+                                จัดการชุมนุม
+                            </a>
+                        </li>
+                    <% } else { %>
+                        <li>
+                            <a href="/student" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/[0.06] transition-all duration-300">
+                                สมัครชุมนุม
+                            </a>
+                        </li>
+                    <% } %>
+                    <li class="ml-4 flex items-center gap-1">
+                        <a href="/auth/profile" class="p-2 rounded-xl bg-white/[0.05] border border-white/10 text-gray-400 hover:text-white hover:border-neon-blue/30 transition-all duration-300" title="โปรไฟล์ของฉัน">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="ml-1">
+                        <a href="/auth/logout" class="group relative px-5 py-2 rounded-xl text-sm font-semibold text-white overflow-hidden transition-all duration-300 hover:shadow-neon-pink">
+                            <span class="absolute inset-0 bg-gradient-to-r from-skwkPink/80 to-neon-pink/80 rounded-xl"></span>
+                            <span class="absolute inset-0 bg-gradient-to-r from-neon-pink to-skwkPink opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></span>
+                            <span class="relative">ออกจากระบบ</span>
+                        </a>
+                    </li>
+                <% } else { %>
+                    <li>
+                        <a href="/auth/login" class="px-5 py-2 rounded-xl text-sm font-semibold text-gray-300 border border-white/10 hover:border-neon-blue/50 hover:text-neon-blue hover:shadow-neon-blue transition-all duration-300">
+                            เข้าสู่ระบบ
+                        </a>
+                    </li>
+                    <li class="ml-1">
+                        <a href="/auth/register" class="group relative px-5 py-2 rounded-xl text-sm font-semibold text-white overflow-hidden transition-all duration-300 hover:shadow-neon-pink">
+                            <span class="absolute inset-0 bg-gradient-to-r from-skwkPink to-neon-pink rounded-xl"></span>
+                            <span class="absolute inset-0 bg-gradient-to-r from-neon-pink to-skwkPink opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></span>
+                            <span class="relative">สมัครสมาชิก</span>
+                        </a>
+                    </li>
+                <% } %>
+            </ul>
+        </div>
+    </nav>

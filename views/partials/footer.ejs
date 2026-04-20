@@ -1,0 +1,30 @@
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-white/[0.05] bg-black/30 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2 text-sm text-gray-500">
+                <span>&copy; <%= new Date().getFullYear() %></span>
+                <span class="text-white/20">|</span>
+                <span>โรงเรียนศรีกระนวนวิทยาคม</span>
+            </div>
+            <div class="flex items-center gap-1.5 text-sm text-gray-500">
+                <span>พัฒนาด้วย</span>
+                <span class="text-skwkPink text-glow-pink animate-pulse text-base">❤️</span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-skwkPink to-neon-blue font-semibold">SKWK Dev Team</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const socket = io();
+        
+        socket.on('clubs_update', (data) => {
+            // We will look for elements with specific club IDs and update their UI
+            if(data.clubId && document.getElementById('club-count-' + data.clubId)) {
+                document.getElementById('club-count-' + data.clubId).innerText = data.current_students + ' / ' + data.max_students;
+                const progress = (data.current_students / data.max_students) * 100;
+                document.getElementById('club-progress-' + data.clubId).style.width = progress + '%';
+            }
+        });
+    </script>
+</body>
+</html>
