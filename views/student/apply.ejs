@@ -1,0 +1,105 @@
+<%- include('../partials/header') %>
+
+<main class="flex-1 w-full relative overflow-hidden py-10 px-6">
+    <div class="absolute top-20 left-10 w-72 h-72 bg-skwkPink/10 rounded-full blur-[120px] animate-float pointer-events-none"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-neon-blue/10 rounded-full blur-[150px] animate-float-delayed pointer-events-none"></div>
+
+    <div class="max-w-6xl mx-auto relative z-10">
+        <header class="mb-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+            <div>
+                <p class="text-xs uppercase tracking-[0.3em] text-gray-500 font-black">Student Apply</p>
+                <h1 class="mt-2 text-4xl md:text-5xl font-black text-white text-glow-blue">หน้าสมัครชุมนุม</h1>
+                <p class="mt-3 max-w-2xl text-gray-400">เลือกชุมนุมที่สนใจ ตรวจสอบจำนวนรับ และส่งคำขอสมัครได้จากหน้านี้โดยตรง</p>
+            </div>
+            <a href="/student" class="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-gray-300 hover:bg-white/10 hover:text-white transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                กลับไปหน้าสถานะของฉัน
+            </a>
+        </header>
+
+        <section class="mb-8 rounded-3xl border <%= registrationOpen ? 'border-emerald-500/25 bg-emerald-500/10' : 'border-amber-500/25 bg-amber-500/10' %> p-6 shadow-glass">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+                <div>
+                    <div class="text-xs font-black uppercase tracking-[0.3em] <%= registrationOpen ? 'text-emerald-200/80' : 'text-amber-200/80' %>">System Status</div>
+                    <h2 class="mt-2 text-2xl font-black text-white"><%= registrationOpen ? 'ระบบเปิดรับสมัครอยู่ตอนนี้' : 'ระบบปิดรับสมัครชั่วคราว' %></h2>
+                    <p class="mt-2 text-sm <%= registrationOpen ? 'text-emerald-100/80' : 'text-amber-100/80' %>">
+                        <%= registrationOpen ? 'นักเรียนสามารถเลือกชุมนุมและส่งคำขอสมัครได้ทันที' : 'ยังสามารถดูข้อมูลชุมนุมได้ แต่จะยังไม่สามารถกดสมัครจนกว่าผู้ดูแลจะเปิดระบบอีกครั้ง' %>
+                    </p>
+                </div>
+                <% if (membership) { %>
+                    <div class="rounded-2xl border border-white/10 bg-black/20 px-5 py-4">
+                        <div class="text-xs uppercase tracking-[0.25em] text-gray-500 font-black">สถานะของฉัน</div>
+                        <div class="mt-2 text-lg font-black text-white">สมัครแล้ว: <%= membership.status %></div>
+                    </div>
+                <% } %>
+            </div>
+        </section>
+
+        <% if (membership) { %>
+            <section class="mb-8 rounded-3xl border border-skwkPink/20 bg-skwkPink/10 p-6 shadow-glass">
+                <h2 class="text-2xl font-black text-white">คุณมีคำขอสมัครอยู่แล้ว</h2>
+                <p class="mt-2 text-gray-300">ระบบนี้กำหนดให้สมัครได้ 1 ชุมนุมต่อคน หากต้องการดูสถานะหรือยกเลิกคำขอ ให้กลับไปที่หน้าแดชบอร์ดนักเรียน</p>
+                <a href="/student" class="mt-5 inline-flex items-center gap-2 rounded-2xl bg-white/10 px-5 py-3 text-white font-bold hover:bg-white/15 transition-all">
+                    ไปที่หน้าสถานะของฉัน
+                </a>
+            </section>
+        <% } %>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <% if (clubs && clubs.length > 0) { %>
+                <% clubs.forEach((club, index) => { %>
+                    <article class="group relative rounded-3xl border border-white/[0.06] bg-white/[0.03] p-6 shadow-glass transition-all duration-500 hover:-translate-y-1 hover:border-skwkPink/30"
+                             style="animation: slideUp 0.55s ease-out <%= index * 0.06 %>s both;">
+                        <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-skwkPink/6 to-neon-blue/6 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <div class="text-xs uppercase tracking-[0.2em] text-gray-500 font-black">Club</div>
+                                    <h3 class="mt-2 text-2xl font-black text-white"><%= club.name %></h3>
+                                </div>
+                                <span class="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-emerald-300 font-black">
+                                    เปิดรับ
+                                </span>
+                            </div>
+
+                            <p class="mt-4 text-sm leading-relaxed text-gray-400 min-h-[3rem]"><%= club.description || 'ยังไม่มีรายละเอียดเพิ่มเติม' %></p>
+
+                            <div class="mt-5 grid grid-cols-2 gap-3">
+                                <div class="rounded-2xl border border-white/6 bg-black/20 p-4">
+                                    <div class="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-black">ครูที่ปรึกษา</div>
+                                    <div class="mt-2 font-bold text-white"><%= club.teacher_firstname %> <%= club.teacher_lastname %></div>
+                                </div>
+                                <div class="rounded-2xl border border-white/6 bg-black/20 p-4">
+                                    <div class="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-black">จำนวนรับ</div>
+                                    <div class="mt-2 font-bold text-white"><%= club.current_students %> / <%= club.max_students %></div>
+                                </div>
+                            </div>
+
+                            <div class="mt-5 h-2 rounded-full bg-white/10 overflow-hidden">
+                                <div class="h-full rounded-full bg-gradient-to-r from-skwkPink to-neon-blue" style="width: <%= Math.min((club.current_students / club.max_students) * 100, 100) %>%"></div>
+                            </div>
+
+                            <div class="mt-6">
+                                <a href="/student/club/<%= club.id %>" class="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-white font-bold hover:bg-white/10 hover:border-skwkPink/30 transition-all">
+                                    ดูรายละเอียดและสมัคร
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                <% }) %>
+            <% } else { %>
+                <div class="col-span-full rounded-3xl border border-white/8 border-dashed bg-white/[0.02] px-8 py-16 text-center">
+                    <h2 class="text-2xl font-black text-white">ยังไม่มีชุมนุมที่เปิดรับสมัคร</h2>
+                    <p class="mt-3 text-gray-400">โปรดติดตามประกาศจากโรงเรียนหรือกลับมาตรวจสอบอีกครั้งภายหลัง</p>
+                </div>
+            <% } %>
+        </section>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>

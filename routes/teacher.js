@@ -60,7 +60,12 @@ router.get('/club/:id', async (req, res) => {
             ORDER BY m.registered_at DESC
         `, [id]);
 
-        res.render('teacher/manage_club', { club: clubCheck[0], members });
+        res.render('teacher/manage_club', {
+            club: clubCheck[0],
+            members,
+            error: req.query.error || null,
+            success: req.query.success || null
+        });
     } catch (e) {
         console.error(e);
         res.status(500).send('Internal Server Error');
@@ -70,12 +75,35 @@ router.get('/club/:id', async (req, res) => {
 // Member Action (Approve/Reject)
 router.post('/club/:club_id/member/:student_id/:action', async (req, res) => {
     const { club_id, student_id, action } = req.params;
+    if (!['approve', 'reject'].includes(action)) {
+        return res.status(400).send('Invalid action');
+    }
+
     const status = action === 'approve' ? 'approved' : 'rejected';
     
     try {
         // Verify ownership
         const [clubCheck] = await pool.query('SELECT * FROM clubs WHERE id = ? AND teacher_id = ?', [club_id, req.session.user.id]);
         if (clubCheck.length === 0) return res.status(403).send('Unauthorized');
+
+        const [membershipRows] = await pool.query(
+            'SELECT status FROM memberships WHERE club_id = ? AND student_id = ?',
+            [club_id, student_id]
+        );
+        if (membershipRows.length === 0) {
+            return res.redirect(`/teacher/club/${club_id}?error=member_not_found`);
+        }
+
+        if (action === 'approve' && membershipRows[0].status !== 'approved') {
+            const [stats] = await pool.query(
+                'SELECT COUNT(*) as currentApproved FROM memberships WHERE club_id = ? AND status = "approved"',
+                [club_id]
+            );
+
+            if (stats[0].currentApproved >= clubCheck[0].max_students) {
+                return res.redirect(`/teacher/club/${club_id}?error=club_full`);
+            }
+        }
 
         await pool.query('UPDATE memberships SET status = ? WHERE club_id = ? AND student_id = ?', [status, club_id, student_id]);
         
@@ -89,7 +117,7 @@ router.post('/club/:club_id/member/:student_id/:action', async (req, res) => {
             });
         }
 
-        res.redirect(`/teacher/club/${club_id}`);
+        res.redirect(`/teacher/club/${club_id}?success=member_updated`);
     } catch (e) {
         console.error(e);
         res.status(500).send('Internal Server Error');

@@ -17,7 +17,33 @@ router.get('/', async (req, res) => {
             WHERE m.student_id = ?
         `, [req.session.user.id]);
 
-        res.render('student/dashboard', { membership: membership[0] || null });
+        res.render('student/dashboard', {
+            membership: membership[0] || null,
+            error: req.query.error || null
+        });
+    } catch (e) {
+        console.error(e);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+router.get('/apply', async (req, res) => {
+    try {
+        const [clubs] = await pool.query(`
+            SELECT c.*, u.firstname as teacher_firstname, u.lastname as teacher_lastname,
+            (SELECT COUNT(*) FROM memberships WHERE club_id = c.id AND status = 'approved') as current_students
+            FROM clubs c
+            JOIN users u ON c.teacher_id = u.id
+            WHERE c.status = 'open'
+            ORDER BY c.name ASC
+        `);
+        const [membership] = await pool.query('SELECT club_id, status FROM memberships WHERE student_id = ?', [req.session.user.id]);
+
+        res.render('student/apply', {
+            clubs,
+            membership: membership[0] || null,
+            registrationOpen: res.locals.sysSettings.registration_open === '1'
+        });
     } catch (e) {
         console.error(e);
         res.status(500).send('Internal Server Error');
@@ -47,7 +73,8 @@ router.get('/club/:id', async (req, res) => {
         res.render('student/club_detail', { 
             club: clubs[0], 
             membership: membership[0] || null,
-            hasAnyMembership: anyMembership.length > 0 
+            hasAnyMembership: anyMembership.length > 0,
+            registrationOpen: res.locals.sysSettings.registration_open === '1'
         });
     } catch (e) {
         console.error(e);

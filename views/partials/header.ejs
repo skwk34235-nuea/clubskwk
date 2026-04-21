@@ -4,8 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบสมัครชุมนุม ศรีกระนวนวิทยาคม</title>
-    <meta name="description" content="ระบบสมัครชุมนุมออนไลน์ โรงเรียนศรีกระนวนวิทยาคม - สมัครง่าย สะดวก รวดเร็ว">
+    <meta name="description" content="ระบบสมัครชุมนุมออนไลน์ โรงเรียนศรีกระนวนวิทยาคม">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        (() => {
+            const savedTheme = localStorage.getItem('clubskwk-theme');
+            const preferredTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            document.documentElement.dataset.theme = savedTheme || preferredTheme;
+        })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -66,18 +73,141 @@
       }
     </script>
     <style>
-        /* Minimal base styles that Tailwind cannot handle */
+        :root {
+            --app-bg: #050510;
+            --app-text: #f8fafc;
+            --app-muted: #9ca3af;
+            --app-border: rgba(255, 255, 255, 0.08);
+            --app-nav: rgba(0, 0, 0, 0.4);
+            --app-soft: rgba(255, 255, 255, 0.03);
+            --app-soft-2: rgba(255, 255, 255, 0.05);
+            --app-input: rgba(255, 255, 255, 0.04);
+        }
+        html[data-theme="light"] {
+            --app-bg: #f6f2ee;
+            --app-text: #162033;
+            --app-muted: #5f6b7b;
+            --app-border: rgba(15, 23, 42, 0.12);
+            --app-nav: rgba(255, 255, 255, 0.78);
+            --app-soft: rgba(255, 255, 255, 0.82);
+            --app-soft-2: rgba(255, 255, 255, 0.92);
+            --app-input: rgba(255, 255, 255, 0.94);
+        }
         body {
-            background-color: #050510;
+            background-color: var(--app-bg);
             background-image:
                 radial-gradient(ellipse at 20% 0%, rgba(232, 62, 140, 0.12) 0px, transparent 50%),
                 radial-gradient(ellipse at 80% 100%, rgba(0, 212, 255, 0.08) 0px, transparent 50%),
                 radial-gradient(ellipse at 50% 50%, rgba(12, 58, 106, 0.1) 0px, transparent 70%);
             background-attachment: fixed;
+            color: var(--app-text);
         }
         .text-glow-pink { text-shadow: 0 0 20px rgba(232, 62, 140, 0.6), 0 0 40px rgba(232, 62, 140, 0.3); }
         .text-glow-blue { text-shadow: 0 0 20px rgba(0, 212, 255, 0.6), 0 0 40px rgba(0, 212, 255, 0.3); }
         .border-glow { box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 0 15px rgba(232, 62, 140, 0.1); }
+        html[data-theme="light"] .text-white,
+        html[data-theme="light"] .text-gray-200,
+        html[data-theme="light"] .text-gray-300 {
+            color: var(--app-text) !important;
+        }
+        html[data-theme="light"] .text-gray-400,
+        html[data-theme="light"] .text-gray-500,
+        html[data-theme="light"] .text-gray-600,
+        html[data-theme="light"] .text-gray-700 {
+            color: var(--app-muted) !important;
+        }
+        html[data-theme="light"] [class*="bg-white/"] {
+            background-color: var(--app-soft) !important;
+        }
+        html[data-theme="light"] [class*="bg-black/"] {
+            background-color: var(--app-nav) !important;
+        }
+        html[data-theme="light"] [class*="border-white/"] {
+            border-color: var(--app-border) !important;
+        }
+        html[data-theme="light"] [class*="shadow-glass"] {
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255,255,255,0.6) !important;
+        }
+        html[data-theme="light"] .shadow-neon-pink,
+        html[data-theme="light"] .shadow-neon-blue,
+        html[data-theme="light"] .text-glow-pink,
+        html[data-theme="light"] .text-glow-blue {
+            box-shadow: none !important;
+            text-shadow: none !important;
+        }
+        html[data-theme="light"] nav {
+            background-color: var(--app-nav) !important;
+            border-color: var(--app-border) !important;
+        }
+        html[data-theme="light"] .theme-panel {
+            background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.76)) !important;
+            border-color: rgba(184, 193, 204, 0.5) !important;
+            box-shadow: 0 24px 60px rgba(148, 163, 184, 0.18), inset 0 1px 0 rgba(255,255,255,0.85) !important;
+        }
+        html[data-theme="light"] .theme-field {
+            background: rgba(255,255,255,0.9) !important;
+            border-color: rgba(191, 199, 210, 0.75) !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.92), 0 1px 2px rgba(15,23,42,0.04) !important;
+        }
+        html[data-theme="light"] .theme-field:focus {
+            border-color: rgba(217, 59, 141, 0.45) !important;
+            box-shadow: 0 0 0 4px rgba(217, 59, 141, 0.08), inset 0 1px 0 rgba(255,255,255,0.95) !important;
+        }
+        html[data-theme="light"] .theme-primary-btn {
+            color: #fff !important;
+            box-shadow: 0 12px 26px rgba(217, 59, 141, 0.18) !important;
+        }
+        html[data-theme="light"] .theme-primary-btn > span:first-child {
+            background: linear-gradient(135deg, #1fb3e4 0%, #8b6fd6 38%, #d93b8d 100%) !important;
+        }
+        html[data-theme="light"] .theme-primary-btn > span:nth-child(2) {
+            display: none !important;
+        }
+        html[data-theme="light"] .theme-primary-btn:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 16px 28px rgba(217, 59, 141, 0.22) !important;
+        }
+        html[data-theme="light"] .theme-secondary-btn {
+            background: rgba(255,255,255,0.88) !important;
+            color: var(--app-text) !important;
+            border-color: rgba(191, 199, 210, 0.75) !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 8px 18px rgba(148, 163, 184, 0.1) !important;
+        }
+        html[data-theme="light"] .theme-divider-chip {
+            background: #f6f2ee !important;
+            color: var(--app-muted) !important;
+        }
+        html[data-theme="light"] .theme-status-card {
+            background: rgba(255,255,255,0.9) !important;
+            border-color: rgba(191, 199, 210, 0.65) !important;
+        }
+        html[data-theme="dark"] select,
+        html[data-theme="dark"] textarea,
+        html[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]) {
+            background-color: var(--app-input);
+            color: #f8fafc;
+            color-scheme: dark;
+        }
+        html[data-theme="dark"] option {
+            background-color: #101526;
+            color: #f8fafc;
+        }
+        html[data-theme="light"] select,
+        html[data-theme="light"] textarea,
+        html[data-theme="light"] input:not([type="checkbox"]):not([type="radio"]) {
+            background-color: var(--app-input);
+            color: var(--app-text);
+            color-scheme: light;
+        }
+        html[data-theme="light"] option {
+            background-color: #ffffff;
+            color: #162033;
+        }
+        html[data-theme="light"] .backdrop-blur-xl,
+        html[data-theme="light"] .backdrop-blur-2xl,
+        html[data-theme="light"] .backdrop-blur-md {
+            backdrop-filter: blur(14px);
+        }
         @keyframes borderRotate {
             0% { --angle: 0deg; }
             100% { --angle: 360deg; }
@@ -86,10 +216,8 @@
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body class="min-h-screen flex flex-col text-gray-200 font-sans antialiased">
-    <!-- Navbar -->
     <nav class="sticky top-0 z-50 backdrop-blur-xl bg-black/40 border-b border-white/[0.06] shadow-glass">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
-            <!-- Logo -->
             <a href="/" class="flex items-center gap-3 group">
                 <div class="relative">
                     <div class="absolute inset-0 bg-neon-pink/30 rounded-xl blur-lg group-hover:bg-neon-pink/50 transition-all duration-500"></div>
@@ -107,32 +235,24 @@
                 </div>
             </a>
 
-            <!-- Navigation Links -->
             <ul class="flex gap-2 items-center">
                 <li>
-                    <a href="/" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/[0.06] transition-all duration-300">
-                        หน้าแรก
-                    </a>
+                    <a href="/" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/[0.06] transition-all duration-300">หน้าแรก</a>
+                </li>
+                <li>
+                    <button id="theme-toggle" type="button" class="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/[0.08] transition-all duration-300">
+                        <span id="theme-toggle-icon">◐</span>
+                        <span id="theme-toggle-label">ธีม</span>
+                    </button>
                 </li>
                 <% if (user) { %>
                     <% if (user.role === 'admin') { %>
-                        <li>
-                            <a href="/admin" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/[0.06] transition-all duration-300">
-                                แดชบอร์ดผู้ดูแล
-                            </a>
-                        </li>
+                        <li><a href="/admin" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/[0.06] transition-all duration-300">แดชบอร์ดผู้ดูแล</a></li>
                     <% } else if (user.role === 'teacher') { %>
-                        <li>
-                            <a href="/teacher" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/[0.06] transition-all duration-300">
-                                จัดการชุมนุม
-                            </a>
-                        </li>
+                        <li><a href="/teacher" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/[0.06] transition-all duration-300">จัดการชุมนุม</a></li>
                     <% } else { %>
-                        <li>
-                            <a href="/student" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/[0.06] transition-all duration-300">
-                                สมัครชุมนุม
-                            </a>
-                        </li>
+                        <li><a href="/student/apply" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/[0.06] transition-all duration-300">สมัครชุมนุม</a></li>
+                        <li><a href="/student" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/[0.06] transition-all duration-300">สถานะของฉัน</a></li>
                     <% } %>
                     <li class="ml-4 flex items-center gap-1">
                         <a href="/auth/profile" class="p-2 rounded-xl bg-white/[0.05] border border-white/10 text-gray-400 hover:text-white hover:border-neon-blue/30 transition-all duration-300" title="โปรไฟล์ของฉัน">
@@ -142,26 +262,44 @@
                         </a>
                     </li>
                     <li class="ml-1">
-                        <a href="/auth/logout" class="group relative px-5 py-2 rounded-xl text-sm font-semibold text-white overflow-hidden transition-all duration-300 hover:shadow-neon-pink">
-                            <span class="absolute inset-0 bg-gradient-to-r from-skwkPink/80 to-neon-pink/80 rounded-xl"></span>
-                            <span class="absolute inset-0 bg-gradient-to-r from-neon-pink to-skwkPink opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></span>
-                            <span class="relative">ออกจากระบบ</span>
-                        </a>
+                        <form action="/auth/logout" method="POST">
+                            <button type="submit" class="group relative px-5 py-2 rounded-xl text-sm font-semibold text-white overflow-hidden transition-all duration-300 hover:shadow-neon-pink">
+                                <span class="absolute inset-0 bg-gradient-to-r from-skwkPink/80 to-neon-pink/80 rounded-xl"></span>
+                                <span class="absolute inset-0 bg-gradient-to-r from-neon-pink to-skwkPink opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></span>
+                                <span class="relative">ออกจากระบบ</span>
+                            </button>
+                        </form>
                     </li>
                 <% } else { %>
                     <li>
-                        <a href="/auth/login" class="px-5 py-2 rounded-xl text-sm font-semibold text-gray-300 border border-white/10 hover:border-neon-blue/50 hover:text-neon-blue hover:shadow-neon-blue transition-all duration-300">
-                            เข้าสู่ระบบ
-                        </a>
-                    </li>
-                    <li class="ml-1">
-                        <a href="/auth/register" class="group relative px-5 py-2 rounded-xl text-sm font-semibold text-white overflow-hidden transition-all duration-300 hover:shadow-neon-pink">
-                            <span class="absolute inset-0 bg-gradient-to-r from-skwkPink to-neon-pink rounded-xl"></span>
-                            <span class="absolute inset-0 bg-gradient-to-r from-neon-pink to-skwkPink opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></span>
-                            <span class="relative">สมัครสมาชิก</span>
-                        </a>
+                        <a href="/auth/login" class="px-5 py-2 rounded-xl text-sm font-semibold text-gray-300 border border-white/10 hover:border-neon-blue/50 hover:text-neon-blue hover:shadow-neon-blue transition-all duration-300">เข้าสู่ระบบ</a>
                     </li>
                 <% } %>
             </ul>
         </div>
     </nav>
+    <script>
+        (() => {
+            const root = document.documentElement;
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeLabel = document.getElementById('theme-toggle-label');
+            const themeIcon = document.getElementById('theme-toggle-icon');
+
+            const syncTheme = () => {
+                const currentTheme = root.dataset.theme || 'dark';
+                if (themeLabel) themeLabel.textContent = currentTheme === 'dark' ? 'มืด' : 'สว่าง';
+                if (themeIcon) themeIcon.textContent = currentTheme === 'dark' ? '☾' : '☀';
+            };
+
+            syncTheme();
+
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    const nextTheme = (root.dataset.theme || 'dark') === 'dark' ? 'light' : 'dark';
+                    root.dataset.theme = nextTheme;
+                    localStorage.setItem('clubskwk-theme', nextTheme);
+                    syncTheme();
+                });
+            }
+        })();
+    </script>

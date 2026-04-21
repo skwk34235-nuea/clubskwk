@@ -1,60 +1,75 @@
 <%- include('../partials/header') %>
 
 <main class="flex-1 w-full relative overflow-hidden py-10 px-6">
-    <!-- Background Decor -->
     <div class="absolute top-20 left-10 w-72 h-72 bg-skwkPink/10 rounded-full blur-[120px] animate-float pointer-events-none"></div>
     <div class="absolute bottom-20 right-10 w-96 h-96 bg-neon-blue/10 rounded-full blur-[150px] animate-float-delayed pointer-events-none"></div>
 
     <div class="max-w-6xl mx-auto z-10 relative">
         <header class="mb-10 animate-fade-in text-center md:text-left">
             <h1 class="text-4xl font-black text-white text-glow-pink">แผงควบคุมผู้ดูแลระบบ</h1>
-            <p class="text-gray-400 mt-2">ภาพรวมการทำงานของระบบและสถิติต่างๆ</p>
+            <p class="text-gray-400 mt-2">ภาพรวมการใช้งานระบบ พร้อมปุ่มควบคุมการรับสมัครชุมนุมทั้งโรงเรียนในครั้งเดียว</p>
         </header>
 
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 animate-slide-up">
-            <!-- Total Users -->
-            <div class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] p-6 rounded-2xl shadow-glass group hover:border-skwkPink/50 transition-all duration-300">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="p-3 bg-skwkPink/20 rounded-xl text-skwkPink shadow-neon-pink group-hover:scale-110 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                    </div>
-                </div>
-                <h3 class="text-gray-500 text-sm font-semibold uppercase tracking-wider">ผู้ใช้งานทั้งหมด</h3>
-                <p class="text-4xl font-bold text-white mt-1"><%= stats.users %></p>
+        <% if (success === 'registration_opened' || success === 'registration_closed') { %>
+            <div class="mb-8 rounded-2xl border <%= success === 'registration_opened' ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-amber-500/30 bg-amber-500/10 text-amber-300' %> px-5 py-4 font-semibold">
+                <%= success === 'registration_opened' ? 'เปิดรับสมัครทุกชุมนุมเรียบร้อยแล้ว' : 'ปิดรับสมัครทุกชุมนุมเรียบร้อยแล้ว' %>
             </div>
+        <% } %>
 
-            <!-- Total Clubs -->
-            <div class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] p-6 rounded-2xl shadow-glass group hover:border-neon-blue/50 transition-all duration-300">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="p-3 bg-neon-blue/20 rounded-xl text-neon-blue shadow-neon-blue group-hover:scale-110 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                        </svg>
+        <div class="mb-10 grid grid-cols-1 xl:grid-cols-[1.15fr_0.85fr] gap-6 animate-slide-up">
+            <section class="rounded-3xl border border-white/[0.08] bg-white/[0.03] p-7 shadow-glass">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.3em] text-gray-500 font-black">Registration Control</p>
+                        <h2 class="text-3xl font-black text-white mt-2">ควบคุมการสมัครทั้งระบบ</h2>
+                        <p class="text-gray-400 mt-3 max-w-2xl">กดครั้งเดียวเพื่อเปิดหรือปิดรับสมัครชุมนุมทั้งหมด ระบบจะอัปเดตสถานะรวมและสถานะทุกชุมนุมให้พร้อมกัน</p>
+                    </div>
+                    <div class="rounded-2xl px-5 py-4 border <%= config.registration_open === '1' ? 'border-emerald-400/30 bg-emerald-400/10 text-emerald-300' : 'border-amber-400/30 bg-amber-400/10 text-amber-300' %>">
+                        <div class="text-xs uppercase tracking-[0.25em] font-black opacity-80">สถานะปัจจุบัน</div>
+                        <div class="mt-2 text-xl font-black"><%= config.registration_open === '1' ? 'เปิดรับสมัคร' : 'ปิดรับสมัคร' %></div>
                     </div>
                 </div>
-                <h3 class="text-gray-500 text-sm font-semibold uppercase tracking-wider">ชุมนุมทั้งหมด</h3>
-                <p class="text-4xl font-bold text-white mt-1"><%= stats.clubs %></p>
-            </div>
 
-            <!-- Total Memberships -->
-            <div class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] p-6 rounded-2xl shadow-glass group hover:border-neon-purple/50 transition-all duration-300">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="p-3 bg-purple-500/20 rounded-xl text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.4)] group-hover:scale-110 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <form action="/admin/registration/toggle" method="POST">
+                        <input type="hidden" name="mode" value="open">
+                        <button type="submit" class="w-full rounded-2xl border border-emerald-400/25 bg-emerald-400/10 px-5 py-5 text-left transition-all hover:bg-emerald-400/15 hover:shadow-[0_0_20px_rgba(52,211,153,0.15)]">
+                            <span class="block text-sm font-black uppercase tracking-[0.2em] text-emerald-300">เปิดทั้งหมด</span>
+                            <span class="mt-2 block text-lg font-bold text-white">เปิดรับสมัครทุกชุมนุมทันที</span>
+                            <span class="mt-1 block text-sm text-emerald-100/75">เหมาะสำหรับช่วงเริ่มต้นการเลือกชุมนุม</span>
+                        </button>
+                    </form>
+                    <form action="/admin/registration/toggle" method="POST" onsubmit="return confirm('ยืนยันการปิดรับสมัครทุกชุมนุมใช่หรือไม่?');">
+                        <input type="hidden" name="mode" value="close">
+                        <button type="submit" class="w-full rounded-2xl border border-amber-400/25 bg-amber-400/10 px-5 py-5 text-left transition-all hover:bg-amber-400/15 hover:shadow-[0_0_20px_rgba(251,191,36,0.12)]">
+                            <span class="block text-sm font-black uppercase tracking-[0.2em] text-amber-300">ปิดทั้งหมด</span>
+                            <span class="mt-2 block text-lg font-bold text-white">ปิดรับสมัครทุกชุมนุมทันที</span>
+                            <span class="mt-1 block text-sm text-amber-100/75">ใช้เมื่อสิ้นสุดรอบสมัครหรือระหว่างตรวจสอบข้อมูล</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="rounded-3xl border border-white/[0.08] bg-white/[0.03] p-7 shadow-glass">
+                <p class="text-xs uppercase tracking-[0.3em] text-gray-500 font-black">Quick Summary</p>
+                <div class="mt-6 space-y-5">
+                    <div class="flex items-center justify-between rounded-2xl border border-white/[0.06] bg-black/20 px-5 py-4">
+                        <span class="text-gray-400">ผู้ใช้ทั้งหมด</span>
+                        <span class="text-3xl font-black text-white"><%= stats.users %></span>
+                    </div>
+                    <div class="flex items-center justify-between rounded-2xl border border-white/[0.06] bg-black/20 px-5 py-4">
+                        <span class="text-gray-400">ชุมนุมทั้งหมด</span>
+                        <span class="text-3xl font-black text-white"><%= stats.clubs %></span>
+                    </div>
+                    <div class="flex items-center justify-between rounded-2xl border border-white/[0.06] bg-black/20 px-5 py-4">
+                        <span class="text-gray-400">สมาชิกที่อนุมัติแล้ว</span>
+                        <span class="text-3xl font-black text-white"><%= stats.members %></span>
                     </div>
                 </div>
-                <h3 class="text-gray-500 text-sm font-semibold uppercase tracking-wider">สมาชิกที่อนุมัติแล้ว</h3>
-                <p class="text-4xl font-bold text-white mt-1"><%= stats.members %></p>
-            </div>
+            </section>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Quick Actions -->
             <div class="lg:col-span-1 space-y-6 animate-slide-up-delayed">
                 <div class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] p-6 rounded-2xl shadow-glass">
                     <h3 class="text-xl font-bold text-white mb-6">จัดการระบบ</h3>
@@ -73,13 +88,21 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                 </svg>
                             </div>
-                            <span class="text-gray-200 font-medium">ดูรายชื่อชุมนุม</span>
+                            <span class="text-gray-200 font-medium">จัดการชุมนุม</span>
+                        </a>
+                        <a href="/admin/settings" class="flex items-center gap-3 p-4 rounded-xl bg-white/[0.05] border border-white/[0.08] hover:bg-white/[0.1] hover:border-white/30 transition-all duration-300 group">
+                            <div class="p-2 bg-white/10 rounded-lg text-gray-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <span class="text-gray-200 font-medium">ตั้งค่าระบบ</span>
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Recent Users -->
             <div class="lg:col-span-2 animate-slide-up-delayed">
                 <div class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-2xl shadow-glass overflow-hidden">
                     <div class="p-6 border-b border-white/[0.08] flex justify-between items-center bg-white/[0.01]">
@@ -99,23 +122,14 @@
                             <tbody class="divide-y divide-white/[0.06]">
                                 <% recentUsers.forEach(user => { %>
                                     <tr class="hover:bg-white/[0.03] transition-colors">
-                                        <td class="px-6 py-4 text-white font-medium">
-                                            <%= user.firstname %> <%= user.lastname %>
-                                        </td>
-                                        <td class="px-6 py-4 text-gray-400">
-                                            <%= user.username %>
-                                        </td>
+                                        <td class="px-6 py-4 text-white font-medium"><%= user.firstname %> <%= user.lastname %></td>
+                                        <td class="px-6 py-4 text-gray-400"><%= user.username %></td>
                                         <td class="px-6 py-4">
-                                            <span class="px-2 py-1 rounded-md text-[10px] uppercase font-bold tracking-wider 
-                                                <%= user.role === 'admin' ? 'bg-skwkPink/20 text-skwkPink border border-skwkPink/30' : 
-                                                   (user.role === 'teacher' ? 'bg-neon-blue/20 text-neon-blue border border-neon-blue/30' : 
-                                                   'bg-gray-500/20 text-gray-400 border border-white/10') %>">
+                                            <span class="px-2 py-1 rounded-md text-[10px] uppercase font-bold tracking-wider <%= user.role === 'admin' ? 'bg-skwkPink/20 text-skwkPink border border-skwkPink/30' : (user.role === 'teacher' ? 'bg-neon-blue/20 text-neon-blue border border-neon-blue/30' : 'bg-gray-500/20 text-gray-400 border border-white/10') %>">
                                                 <%= user.role %>
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 text-gray-500 text-sm">
-                                            <%= new Date(user.created_at).toLocaleDateString('th-TH') %>
-                                        </td>
+                                        <td class="px-6 py-4 text-gray-500 text-sm"><%= new Date(user.created_at).toLocaleDateString('th-TH') %></td>
                                     </tr>
                                 <% }) %>
                             </tbody>

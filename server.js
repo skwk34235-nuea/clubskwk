@@ -12,11 +12,24 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
+const isProduction = process.env.NODE_ENV === 'production';
+
+app.disable('x-powered-by');
+app.use((req, res, next) => {
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    next();
+});
 
 // Configure Session Store
 const sessionStore = new MySQLStore({
     createDatabaseTable: true
 }, pool);
+
+if (!process.env.SESSION_SECRET) {
+    console.warn('SESSION_SECRET is not configured. Using an insecure fallback secret for development only.');
+}
 
 app.use(session({
     key: 'club_session_cookie',
@@ -24,7 +37,12 @@ app.use(session({
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 day
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24,
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: isProduction
+    }
 }));
 
 app.use(express.json());

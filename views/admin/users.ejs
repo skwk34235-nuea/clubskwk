@@ -1,80 +1,120 @@
 <%- include('../partials/header') %>
 
 <main class="flex-1 w-full relative overflow-hidden py-10 px-6">
-    <!-- Background Decor -->
     <div class="absolute top-20 right-10 w-72 h-72 bg-neon-blue/10 rounded-full blur-[120px] animate-float pointer-events-none"></div>
     <div class="absolute bottom-20 left-10 w-96 h-96 bg-skwkPink/10 rounded-full blur-[150px] animate-float-delayed pointer-events-none"></div>
 
-    <div class="max-w-6xl mx-auto z-10 relative">
+    <div class="max-w-7xl mx-auto z-10 relative">
         <header class="mb-10 animate-fade-in flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="text-center md:text-left">
-                <h1 class="text-4xl font-black text-white text-glow-blue tracking-tight">การจัดการผู้ใช้งาน</h1>
-                <p class="text-gray-400 mt-2">กำหนดบทบาทและจัดการสมาชิกทุกคนในระบบ</p>
+                <h1 class="text-4xl font-black text-white text-glow-blue tracking-tight">จัดการผู้ใช้งาน</h1>
+                <p class="text-gray-400 mt-2">แยกผู้ใช้งานตามบทบาทเพื่อให้ดูแลง่ายขึ้น</p>
             </div>
-            <a href="/admin" class="px-5 py-2.5 rounded-xl bg-white/[0.05] border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                กลับไปที่แดชบอร์ด
-            </a>
+            <div class="flex items-center gap-3">
+                <a href="/admin/users/create" class="px-5 py-2.5 rounded-xl bg-skwkPink text-white hover:shadow-neon-pink transition-all duration-300 flex items-center gap-2 font-semibold">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    เพิ่มผู้ใช้
+                </a>
+                <a href="/admin" class="px-5 py-2.5 rounded-xl bg-white/[0.05] border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    กลับไปที่แดชบอร์ด
+                </a>
+            </div>
         </header>
 
-        <div class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-2xl shadow-glass overflow-hidden animate-slide-up">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="bg-white/[0.02] text-gray-500 text-xs uppercase tracking-widest font-bold">
-                            <th class="px-6 py-5">ชื่อ-นามสกุล</th>
-                            <th class="px-6 py-5">ชื่อผู้ใช้งาน</th>
-                            <th class="px-6 py-5">บทบาทปัจจุบัน</th>
-                            <th class="px-6 py-5">เปลี่ยนบทบาท</th>
-                            <th class="px-6 py-5 text-right">วันที่เข้าร่วม</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-white/[0.06]">
-                        <% users.forEach(user => { %>
-                            <tr class="hover:bg-white/[0.03] transition-colors group">
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center text-white font-bold border border-white/10 group-hover:shadow-neon-blue transition-all duration-300">
-                                            <%= user.firstname.charAt(0) %>
-                                        </div>
-                                        <span class="text-white font-semibold"><%= user.firstname %> <%= user.lastname %></span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-gray-400">
-                                    <%= user.username %>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="px-2.5 py-1 rounded-lg text-[10px] uppercase font-black tracking-widest border
-                                        <%= user.role === 'admin' ? 'bg-skwkPink/10 text-skwkPink border-skwkPink/30 shadow-neon-pink' : 
-                                           (user.role === 'teacher' ? 'bg-neon-blue/10 text-neon-blue border-neon-blue/30 shadow-neon-blue' : 
-                                           'bg-gray-500/10 text-gray-400 border-white/10') %>">
-                                        <%= user.role %>
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <form action="/admin/users/<%= user.id %>/role" method="POST" class="flex items-center gap-2">
-                                        <select name="role" class="bg-white/5 border border-white/10 rounded-lg text-xs text-gray-300 px-3 py-1.5 focus:outline-none focus:border-neon-blue/50 focus:bg-white/10 transition-all appearance-none cursor-pointer">
-                                            <option value="student" <%= user.role === 'student' ? 'selected' : '' %>>Student</option>
-                                            <option value="teacher" <%= user.role === 'teacher' ? 'selected' : '' %>>Teacher</option>
-                                            <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
-                                        </select>
-                                        <button type="submit" class="p-1.5 rounded-lg bg-neon-blue/20 text-neon-blue hover:bg-neon-blue hover:text-white transition-all duration-300 shadow-neon-blue">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </button>
-                                    </form>
-                                </td>
-                                <td class="px-6 py-4 text-right text-gray-500 text-sm">
-                                    <%= new Date(user.created_at).toLocaleDateString('th-TH') %>
-                                </td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
+        <% if (success === 'created' || success === 'updated' || success === 'deleted') { %>
+            <div class="mb-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4 text-emerald-300 font-semibold">
+                <%= success === 'created' ? 'สร้างผู้ใช้เรียบร้อยแล้ว' : (success === 'updated' ? 'อัปเดตข้อมูลผู้ใช้เรียบร้อยแล้ว' : 'ลบผู้ใช้เรียบร้อยแล้ว') %>
             </div>
+        <% } %>
+
+        <% if (error === 'self_delete' || error === 'not_found' || error === 'delete_failed') { %>
+            <div class="mb-6 rounded-2xl border border-red-500/30 bg-red-500/10 px-5 py-4 text-red-300 font-semibold">
+                <%= error === 'self_delete' ? 'ไม่สามารถลบบัญชีผู้ดูแลที่กำลังใช้งานอยู่ได้' : (error === 'not_found' ? 'ไม่พบผู้ใช้ที่ต้องการจัดการ' : 'ไม่สามารถลบผู้ใช้ได้') %>
+            </div>
+        <% } %>
+
+        <%
+            const sections = [
+                { title: 'ผู้ดูแลระบบ', users: users.filter(user => user.role === 'admin'), badge: 'bg-skwkPink/10 text-skwkPink border-skwkPink/30' },
+                { title: 'ครู', users: users.filter(user => user.role === 'teacher'), badge: 'bg-neon-blue/10 text-neon-blue border-neon-blue/30' },
+                { title: 'นักเรียน', users: users.filter(user => user.role === 'student'), badge: 'bg-gray-500/10 text-gray-300 border-white/10' }
+            ];
+        %>
+
+        <div class="space-y-8">
+            <% sections.forEach(section => { %>
+                <section class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-2xl shadow-glass overflow-hidden animate-slide-up">
+                    <div class="px-6 py-5 border-b border-white/[0.08] bg-white/[0.02] flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <h2 class="text-2xl font-black text-white"><%= section.title %></h2>
+                            <span class="px-2.5 py-1 rounded-lg text-[10px] uppercase font-black tracking-widest border <%= section.badge %>">
+                                <%= section.users.length %> คน
+                            </span>
+                        </div>
+                    </div>
+
+                    <% if (section.users.length > 0) { %>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr class="bg-white/[0.01] text-gray-500 text-xs uppercase tracking-widest font-bold">
+                                        <th class="px-6 py-4">ชื่อ-นามสกุล</th>
+                                        <th class="px-6 py-4">ชื่อผู้ใช้</th>
+                                        <th class="px-6 py-4">เปลี่ยนบทบาท</th>
+                                        <th class="px-6 py-4">จัดการ</th>
+                                        <th class="px-6 py-4 text-right">วันที่เข้าร่วม</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-white/[0.06]">
+                                    <% section.users.forEach(user => { %>
+                                        <tr class="hover:bg-white/[0.03] transition-colors">
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center text-white font-bold border border-white/10">
+                                                        <%= user.firstname.charAt(0) %>
+                                                    </div>
+                                                    <span class="text-white font-semibold"><%= user.firstname %> <%= user.lastname %></span>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 text-gray-400"><%= user.username %></td>
+                                            <td class="px-6 py-4">
+                                                <form action="/admin/users/<%= user.id %>/role" method="POST" class="flex items-center gap-2">
+                                                    <select name="role" class="bg-white/5 border border-white/10 rounded-lg text-xs text-gray-300 px-3 py-1.5 focus:outline-none focus:border-neon-blue/50 focus:bg-white/10 transition-all appearance-none cursor-pointer">
+                                                        <option value="student" <%= user.role === 'student' ? 'selected' : '' %>>Student</option>
+                                                        <option value="teacher" <%= user.role === 'teacher' ? 'selected' : '' %>>Teacher</option>
+                                                        <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                                                    </select>
+                                                    <button type="submit" class="p-1.5 rounded-lg bg-neon-blue/20 text-neon-blue hover:bg-neon-blue hover:text-white transition-all duration-300 shadow-neon-blue">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center gap-2">
+                                                    <a href="/admin/users/<%= user.id %>/edit" class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 hover:text-white transition-all text-xs font-bold">แก้ไข</a>
+                                                    <form action="/admin/users/<%= user.id %>/delete" method="POST" onsubmit="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบผู้ใช้นี้?');">
+                                                        <button type="submit" class="px-3 py-1.5 rounded-lg bg-red-500/15 border border-red-500/30 text-red-300 hover:bg-red-500 hover:text-white transition-all text-xs font-bold">ลบ</button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 text-right text-gray-500 text-sm"><%= new Date(user.created_at).toLocaleDateString('th-TH') %></td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } else { %>
+                        <div class="px-6 py-14 text-center text-gray-500">ยังไม่มีผู้ใช้ในหมวดนี้</div>
+                    <% } %>
+                </section>
+            <% }) %>
         </div>
     </div>
 </main>

@@ -1,0 +1,63 @@
+<%- include('../partials/header') %>
+
+<main class="flex-1 w-full relative overflow-hidden py-10 px-6 flex justify-center items-center">
+    <div class="absolute top-20 left-10 w-72 h-72 bg-skwkPink/10 rounded-full blur-[120px] animate-float pointer-events-none"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-neon-blue/10 rounded-full blur-[150px] animate-float-delayed pointer-events-none"></div>
+
+    <div class="max-w-2xl w-full z-10 relative animate-slide-up">
+        <header class="mb-10 text-center">
+            <h1 class="text-4xl font-black text-white text-glow-pink"><%= mode === 'create' ? 'เพิ่มผู้ใช้ใหม่' : 'แก้ไขข้อมูลผู้ใช้' %></h1>
+            <p class="text-gray-400 mt-2"><%= mode === 'create' ? 'สร้างบัญชีผู้ใช้ใหม่และกำหนดบทบาทในระบบ' : 'ปรับปรุงข้อมูลผู้ใช้และรีเซ็ตรหัสผ่านหากต้องการ' %></p>
+        </header>
+
+        <% if (error) { %>
+            <div class="bg-red-500/10 border border-red-500/30 text-red-300 p-4 mb-8 rounded-xl backdrop-blur-md font-semibold">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <div class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] p-8 md:p-10 rounded-3xl shadow-glass">
+            <form action="<%= mode === 'create' ? '/admin/users/create' : '/admin/users/' + userData.id + '/edit' %>" method="POST" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-black text-gray-500 uppercase tracking-widest">ชื่อจริง</label>
+                        <input type="text" name="firstname" value="<%= userData.firstname %>" required class="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:border-neon-blue/50 focus:bg-white/10 outline-none transition-all">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-black text-gray-500 uppercase tracking-widest">นามสกุล</label>
+                        <input type="text" name="lastname" value="<%= userData.lastname %>" required class="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:border-neon-blue/50 focus:bg-white/10 outline-none transition-all">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-black text-gray-500 uppercase tracking-widest">ชื่อผู้ใช้</label>
+                    <input type="text" name="username" value="<%= userData.username %>" required class="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:border-neon-blue/50 focus:bg-white/10 outline-none transition-all">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-black text-gray-500 uppercase tracking-widest">บทบาท</label>
+                        <select name="role" required class="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:border-neon-blue/50 focus:bg-white/10 outline-none transition-all">
+                            <option value="student" <%= userData.role === 'student' ? 'selected' : '' %>>Student</option>
+                            <option value="teacher" <%= userData.role === 'teacher' ? 'selected' : '' %>>Teacher</option>
+                            <option value="admin" <%= userData.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-black text-gray-500 uppercase tracking-widest"><%= mode === 'create' ? 'รหัสผ่าน' : 'รหัสผ่านใหม่ (ถ้าต้องการเปลี่ยน)' %></label>
+                        <input type="password" name="password" <%= mode === 'create' ? 'required' : '' %> class="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:border-neon-blue/50 focus:bg-white/10 outline-none transition-all">
+                    </div>
+                </div>
+
+                <div class="pt-4 flex gap-4">
+                    <a href="/admin/users" class="flex-1 py-4 rounded-xl text-center text-gray-400 font-bold bg-white/5 border border-white/10 hover:bg-white/10 transition-all">ยกเลิก</a>
+                    <button type="submit" class="flex-[2] py-4 rounded-xl bg-skwkPink text-white font-black text-lg shadow-neon-pink hover:scale-[1.02] transition-all">
+                        <%= mode === 'create' ? 'สร้างผู้ใช้' : 'บันทึกการแก้ไข' %>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>

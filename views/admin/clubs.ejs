@@ -1,0 +1,110 @@
+<%- include('../partials/header') %>
+
+<main class="flex-1 w-full relative overflow-hidden py-10 px-6">
+    <div class="absolute top-20 left-10 w-72 h-72 bg-neon-blue/10 rounded-full blur-[120px] animate-float pointer-events-none"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-skwkPink/10 rounded-full blur-[150px] animate-float-delayed pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto z-10 relative">
+        <header class="mb-10 animate-fade-in flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-center md:text-left">
+                <h1 class="text-4xl font-black text-white text-glow-blue tracking-tight">รายการชุมนุมทั้งหมด</h1>
+                <p class="text-gray-400 mt-2">เพิ่ม แก้ไข หรือลบชุมนุม พร้อมตรวจสอบครูที่ปรึกษาและจำนวนสมาชิก</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="/admin/clubs/create" class="px-5 py-2.5 rounded-xl bg-skwkPink text-white hover:shadow-neon-pink transition-all duration-300 flex items-center gap-2 font-semibold">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    เพิ่มชุมนุม
+                </a>
+                <a href="/admin" class="px-5 py-2.5 rounded-xl bg-white/[0.05] border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    กลับไปที่แดชบอร์ด
+                </a>
+            </div>
+        </header>
+
+        <% if (success === 'created' || success === 'updated' || success === 'deleted') { %>
+            <div class="mb-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4 text-emerald-300 font-semibold">
+                <%= success === 'created' ? 'สร้างชุมนุมเรียบร้อยแล้ว' : (success === 'updated' ? 'อัปเดตข้อมูลชุมนุมเรียบร้อยแล้ว' : 'ลบชุมนุมเรียบร้อยแล้ว') %>
+            </div>
+        <% } %>
+
+        <% if (error === 'not_found' || error === 'delete_failed') { %>
+            <div class="mb-6 rounded-2xl border border-red-500/30 bg-red-500/10 px-5 py-4 text-red-300 font-semibold">
+                <%= error === 'not_found' ? 'ไม่พบชุมนุมที่ต้องการจัดการ' : 'ไม่สามารถลบชุมนุมได้' %>
+            </div>
+        <% } %>
+
+        <div class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-2xl shadow-glass overflow-hidden animate-slide-up">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-white/[0.02] text-gray-500 text-xs uppercase tracking-widest font-bold">
+                            <th class="px-6 py-5">ชุมนุม</th>
+                            <th class="px-6 py-5">ครูที่ปรึกษา</th>
+                            <th class="px-6 py-5">สถานะ</th>
+                            <th class="px-6 py-5">สมาชิก</th>
+                            <th class="px-6 py-5">รออนุมัติ</th>
+                            <th class="px-6 py-5">จัดการ</th>
+                            <th class="px-6 py-5 text-right">สร้างเมื่อ</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/[0.06]">
+                        <% if (clubs && clubs.length > 0) { %>
+                            <% clubs.forEach(club => { %>
+                                <tr class="hover:bg-white/[0.03] transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div>
+                                            <div class="text-white font-semibold"><%= club.name %></div>
+                                            <div class="text-sm text-gray-500 mt-1"><%= club.description || 'ไม่มีรายละเอียด' %></div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-300">
+                                        <%= club.teacher_firstname %> <%= club.teacher_lastname %>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2.5 py-1 rounded-lg text-[10px] uppercase font-black tracking-widest border <%= club.status === 'open' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-gray-500/10 text-gray-300 border-white/10' %>">
+                                            <%= club.status %>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-300 font-semibold">
+                                        <%= club.approved_students %> / <%= club.max_students %>
+                                    </td>
+                                    <td class="px-6 py-4 text-amber-300 font-semibold">
+                                        <%= club.pending_students %>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2">
+                                            <a href="/admin/clubs/<%= club.id %>/edit" class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 hover:text-white transition-all text-xs font-bold">
+                                                แก้ไข
+                                            </a>
+                                            <form action="/admin/clubs/<%= club.id %>/delete" method="POST" onsubmit="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบชุมนุมนี้? รายการสมัครสมาชิกจะถูกลบไปด้วย');">
+                                                <button type="submit" class="px-3 py-1.5 rounded-lg bg-red-500/15 border border-red-500/30 text-red-300 hover:bg-red-500 hover:text-white transition-all text-xs font-bold">
+                                                    ลบ
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right text-gray-500 text-sm">
+                                        <%= new Date(club.created_at).toLocaleDateString('th-TH') %>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="7" class="px-6 py-16 text-center text-gray-500">
+                                    ยังไม่มีข้อมูลชุมนุมในระบบ
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>

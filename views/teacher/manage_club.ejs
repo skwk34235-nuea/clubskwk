@@ -29,6 +29,20 @@
             </div>
         </header>
 
+        <% if (error === 'club_full') { %>
+            <div class="mb-6 rounded-2xl border border-red-500/30 bg-red-500/10 px-5 py-4 text-red-300 font-semibold">
+                ไม่สามารถอนุมัติสมาชิกเพิ่มได้ เพราะชุมนุมนี้เต็มแล้ว
+            </div>
+        <% } else if (error === 'member_not_found') { %>
+            <div class="mb-6 rounded-2xl border border-red-500/30 bg-red-500/10 px-5 py-4 text-red-300 font-semibold">
+                ไม่พบข้อมูลสมาชิกที่ต้องการอัปเดต
+            </div>
+        <% } else if (success === 'member_updated') { %>
+            <div class="mb-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4 text-emerald-300 font-semibold">
+                อัปเดตสถานะสมาชิกเรียบร้อยแล้ว
+            </div>
+        <% } %>
+
         <div class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-2xl shadow-glass overflow-hidden animate-slide-up">
             <div class="p-6 border-b border-white/5 bg-white/[0.01]">
                 <h3 class="text-xl font-bold text-white flex items-center gap-2">

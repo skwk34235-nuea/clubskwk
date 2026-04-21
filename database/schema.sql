@@ -34,7 +34,20 @@ CREATE TABLE IF NOT EXISTS memberships (
     UNIQUE KEY (student_id) -- One student per club max
 );
 
+CREATE TABLE IF NOT EXISTS settings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    setting_key VARCHAR(100) NOT NULL UNIQUE,
+    setting_value TEXT,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 -- Insert Default Admin
 -- password is 'admin123' hashed with bcrypt (salt 10 rounds)
 INSERT IGNORE INTO users (username, password, firstname, lastname, role) 
 VALUES ('admin', '$2a$10$3zZ6K/xL82TIs07aL95EbuXmZ2X7n6fV47xJv3x9s.xT1r.r1P/3m', 'System', 'Admin', 'admin');
+
+INSERT IGNORE INTO settings (setting_key, setting_value) VALUES
+('registration_open', '1'),
+('school_name', 'โรงเรียนศรีกระนวนวิทยาคม'),
+('academic_year', '2569'),
+('system_announcement', 'ยินดีต้อนรับสู่ระบบรับสมัครชุมนุมออนไลน์');

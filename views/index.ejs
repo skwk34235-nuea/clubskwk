@@ -25,11 +25,11 @@
         </p>
 
         <% if (!user) { %>
-            <a href="/auth/register" class="group relative inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold text-lg overflow-hidden transition-all duration-500 hover:scale-105 hover:shadow-neon-pink">
+            <a href="/auth/login" class="group relative inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold text-lg overflow-hidden transition-all duration-500 hover:scale-105 hover:shadow-neon-pink">
                 <span class="absolute inset-0 bg-gradient-to-r from-skwkPink to-neon-pink rounded-2xl"></span>
                 <span class="absolute inset-0 bg-gradient-to-r from-neon-pink to-neon-blue opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-2xl"></span>
                 <span class="relative flex items-center gap-2">
-                    เริ่มต้นใช้งานทันที
+                    เข้าสู่ระบบเพื่อใช้งาน
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                     </svg>
@@ -44,6 +44,17 @@
                     <p class="text-xs text-gray-500 uppercase tracking-widest">ยินดีต้อนรับ</p>
                     <p class="font-bold text-white text-lg"><%= user.firstname %> <%= user.lastname %></p>
                 </div>
+            </div>
+        <% } %>
+
+        <% if (user && user.role === 'student') { %>
+            <div class="mt-8">
+                <a href="/student/apply" class="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-white font-bold hover:bg-white/10 hover:border-skwkPink/30 transition-all">
+                    ไปหน้าสมัครชุมนุม
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                    </svg>
+                </a>
             </div>
         <% } %>
     </section>
